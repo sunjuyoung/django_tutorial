@@ -9,6 +9,7 @@
         <title>Blog Post - Start Bootstrap Template</title>
 
           <link href="{% static 'blog/bootstrap/bootstrap.min.css' %}" rel="stylesheet" media="screen" />
+         <script src="https://kit.fontawesome.com/4f69aa2897.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -43,10 +44,24 @@
                             <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
                         </header>
                         <!-- Preview image figure-->
+                        {% if post.head_image %}
                         <figure class="mb-4"><img class="img-fluid rounded" src="{{ post.head_image.url }}" alt="..." /></figure>
+                        {% endif %}
                         <!-- Post content-->
                         <section class="mb-5">
                           <p>{{ post.content }}</p>
+                            {% if post.file_upload %}
+                                <a href="{{ post.file_upload.url }}" class=" btn btn-outline-dark" role="button">
+                                    Download:
+                                    {% if post.get_file_ext == 'csv' %}
+                                        <i class="fa-solid fa-file"></i>
+                                    {% elif post.get_file_ext == 'doc' %}
+                                        <i class="fa-solid fa-file"></i>
+                                    {% else %}
+                                     <i class="fa-solid fa-file"></i>
+                                     {% endif %}
+                                </a>
+                            {% endif %}
                         </section>
                     </article>
                     <!-- Comments section-->

@@ -10,6 +10,7 @@
         <!-- Favicon-->
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'blog/bootstrap/bootstrap.min.css' %}" rel="stylesheet" media="screen" />
+        <script src="https://kit.fontawesome.com/4f69aa2897.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -44,7 +45,11 @@
                     <!-------------- blog post ------------------->
                     {% for p in post_list %}
                     <div class="card mb-4">
-                        <a href="#!"><img class="card-img-top" src="{{ p.head_image.url }}" alt="..." /></a>
+                        {% if p.head_image %}
+                        <a href="#!"><img class="card-img-top" src="{{ p.head_image.url }}" alt="{{ p }} head_image" /></a>
+                        {% else %}
+                        <a href="#!"><img class="card-img-top" src="https://picsum.photos/seed/{{ p.id }}/800/200" alt="random_image" /></a>
+                        {% endif %}
                         <div class="card-body">
                             <div class="small text-muted">{{ p.created_at }}</div>
                             <h2 class="card-title">{{ p.title }}</h2>
