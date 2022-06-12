@@ -10,6 +10,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    #모델 이름 변경
+    class Meta:
+        verbose_name_plural = 'Categories'
+
+
 class Post(models.Model):
     title = models.CharField(max_length=30)
     content = models.TextField()
@@ -22,7 +27,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, null=True,  blank=True ,on_delete=models.SET_NULL)
 
     def __str__(self):
         return f'[{self.pk}]{self.title} :: {self.author}'
