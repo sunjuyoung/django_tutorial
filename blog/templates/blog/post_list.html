@@ -17,13 +17,19 @@
                 <div class="col-lg-8">
                     <!-------------- blog post ------------------->
                     {% for p in post_list %}
-                    <div class="card mb-4">
+                    <div class="card mb-4" id="post-{{ p.pk }}">
                         {% if p.head_image %}
                         <a href="#!"><img class="card-img-top" src="{{ p.head_image.url }}" alt="{{ p }} head_image" /></a>
                         {% else %}
                         <a href="#!"><img class="card-img-top" src="https://picsum.photos/seed/{{ p.id }}/800/200" alt="random_image" /></a>
                         {% endif %}
                         <div class="card-body">
+                            {% if p.category %}
+                            <span class="badge bg-secondary text-decoration-none link-light">{{ p.category }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary text-decoration-none link-light">미분류</span>
+                            {% endif %}
+
                             <div class="small text-muted">{{ p.created_at }}</div>
                             <h2 class="card-title">{{ p.title }}</h2>
                             <p class="card-text">{{ p.content | truncatewords:25}}</p>
