@@ -1,7 +1,11 @@
 {% extends 'blog/base.html' %}
 
             {% block main_area %}
-
+{% if user.is_authenticated %}
+    {% if user.is_superuser or user.is_staff %}
+        <a href="/blog/create_post/" role="button" class="btn btn-info btn-sm float right">New Post</a>
+    {% endif %}
+{% endif %}
 <header class="py-2 bg-light border-bottom mb-4">
             <div class="container">
                 <div class="text-center my-5">
@@ -31,6 +35,7 @@
                             <span class="badge bg-secondary text-decoration-none link-light">미분류</span>
                             {% endif %}
                             </div>
+                            <div class="small text-muted">by {{ p.author }}</div>
                             <div class="small text-muted">{{ p.created_at }}</div>
                             <h2 class="card-title">{{ p.title }}</h2>
                             <p class="card-text">{{ p.content | truncatewords:25}}</p>
@@ -63,5 +68,37 @@
                         </ul>
                     </nav>
                 </div>
+
+              <div class="col-lg-4">
+                    <!-- Search widget-->
+                    <div class="card mb-4">
+                        <div class="card-header">Search</div>
+                        <div class="card-body">
+                            <div class="input-group">
+                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Categories widget-->
+                    <div class="card mb-4" id="categories-card">
+                        <div class="card-header">Categories</div>
+                        <div class="card-body">
+                            <div class="row">
+                                    <ul class="list-unstyled mb-0">
+                                        {% for category in categories %}
+                                        <li><a href="{{ category.get_abolute_url }}">{{ category }}
+                                        ({{ category.post_set.count }})</a></li>
+                                        {% endfor %}
+                                        <li>
+                                            <a href="/blog/category/no_category/">미분류
+                                            ({{  no_catetory.post_count}})</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                  {% endblock %}
