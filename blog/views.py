@@ -1,14 +1,31 @@
 from django.shortcuts import render, redirect
 from . models import Post, Category, Tag
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 
 # Create your views here.
 
+#업데이트 페이지
+class PostUpdate(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content', 'hook_text', 'head_image', 'file_upload', 'category', 'tags']
+
+    template_name = 'blog/post_update_form.html'
+    
+    #포스트 작성자만 수정 dispatch()로 판단
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            return super(PostUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied #403
+        
+
+#작성 페이지
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'hook_text', 'head_image', 'file_upload', 'category']
+    fields = ['title', 'content', 'hook_text', 'head_image', 'file_upload', 'category', 'tags']
 
     #form valid함수 재정의 , author필드 자동으로 채우기
     def form_valid(self, form):
@@ -19,6 +36,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
         else:
             return redirect('/blog')
 
+#블로그 리스트 페이지
 class PostList(ListView):
     model = Post
     ordering = '-pk'
@@ -33,7 +51,7 @@ class PostList(ListView):
         return context
 
 
-
+#
 class PostDetail(DetailView):
     model = Post
     def get_context_data(self, **kwargs):
@@ -44,8 +62,6 @@ class PostDetail(DetailView):
         #카테고리가 지정되지않은 포스트의 개수
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         return context
-
-
 
 
 
